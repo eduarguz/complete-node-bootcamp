@@ -51,19 +51,22 @@ const templateProduct = fs.readFileSync(`${__dirname}/templates/template-product
 
 
 const server = http.createServer((req, res) => {
-    const pathName = req.url;
+    const {query, pathname} = url.parse(req.url, true);
     
-    if(pathName === '/' || pathName === '/overview') {
+    if(pathname === '/' || pathname === '/overview') {
         
         const cardsHtml = dataObj.map(el => replaceTemplate(templateCard, el)).join("")
         const output = templateOverview.replace(/{%PRODUCT_CARDS%}/, cardsHtml);
 
         res.writeHead(200, {'Content-type': 'text/html'})
         res.end(output);
-    } else if (pathName === '/product') {
+    } else if (pathname === '/product') {
 
-        res.end('This is the product');
-    } else if (pathName === '/api'){
+        const product = dataObj[query.id];
+        const output = replaceTemplate(templateProduct, product)
+        res.writeHead(200, {'Content-type': 'text/html'})
+        res.end(output);
+    } else if (pathname === '/api'){
 
         res.writeHead(200, {'Content-type': 'application/json'})
         res.end(data);
