@@ -2,6 +2,8 @@ const fs = require('fs');
 const http = require('http');
 const url = require('url');
 
+const slugify = require('slugify');
+
 const replaceTemplate = require('./modules/replaceTemplate');
 
 // Blocking way
@@ -30,7 +32,10 @@ const replaceTemplate = require('./modules/replaceTemplate');
 
 
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8')
-const dataObj = JSON.parse(data);        
+const dataObj = JSON.parse(data); 
+
+const slugs = dataObj.map(el => slugify(el.productName, {lower: true}))
+console.log(slugs);
 
 const templateOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8')
 const templateCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8')
